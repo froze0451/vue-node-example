@@ -15,7 +15,7 @@
 ### Clone the repository
 
 ```
-clone
+git clone https://github.com/froze0451/vue-node-example.git
 ```
 
 ### Get node modules ready
