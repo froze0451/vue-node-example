@@ -6,6 +6,7 @@ const path = require('path')
 const fs = require('fs')
 
 const { readDB, updateDB } = require('./models/posts')
+
 let data
 
 api.use(cors({
@@ -17,7 +18,7 @@ api.get('/', async (req, res) => {
   const fileName = data.posts[0].image
   const filePath = `./files/${fileName}`
   const bitmap = fs.readFileSync(path.resolve(__dirname, filePath))
-  data.image = await new Buffer.from(bitmap).toString("base64")
+  data.image = new Buffer.from(bitmap).toString("base64")
   res.send(data)
 })
 
@@ -26,11 +27,10 @@ api.post('/', async (req, res) => {
   const newData = {}
 
   const myPost = data.posts.find(post => post.id === id);
-  data.posts[data.posts.indexOf(myPost)].like++
-  newData.posts = await data.posts
+  myPost.like++
+  newData.posts = data.posts
 
   await updateDB(newData)
-  await readDB()
   res.send(req.body)
 })
 

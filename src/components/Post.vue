@@ -1,56 +1,40 @@
 <template>
-  <div class="posts">
-    <div class="post" v-for="post in getData" :key="post.id">
-      <div class="post__image">
-        <img :src="getImage" />
-        <div class="post__image-shade"></div>
-      </div>
-      <div class="post__title">{{ post.name }}</div>
-      <div class="post__info">{{ post.description }}</div>
-      <div class="post__tag">#{{ post.tag }}</div>
-      <div class="post__footer">
-        <p class="post__date">{{ post.date }}</p>
-        <div class="post__likes">
-          <LikeLogo class="post__like" @click="addLike(post.id, post.like)" />
-          <p class="post__likes-amount">{{ post.like }}</p>
-        </div>
+  <div class="post">
+    <div class="post__image">
+      <img :src="getImage" />
+      <div class="post__image-shade"></div>
+    </div>
+    <div class="post__title">{{ name }}</div>
+    <div class="post__info">{{ description }}</div>
+    <div class="post__tag">#{{ tag }}</div>
+    <div class="post__footer">
+      <p class="post__date">{{ date }}</p>
+      <div class="post__likes">
+        <LikeLogo class="post__like" @click="addLike(id, like)" />
+        <p class="post__likes-amount">{{ like }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import { mapActions, mapGetters } from 'vuex'
 import LikeLogo from '../assets/Vector.svg'
 
 export default {
   data() {
     return {}
   },
+  props: [
+    'id',
+    'name',
+    'tag',
+    'description',
+    'date',
+    'like',
+    'addLike',
+    'getImage',
+  ],
   components: { LikeLogo },
-  computed: mapGetters(['getData', 'getImage']),
-  methods: {
-    ...mapActions(['fetchData']),
-    addLike(id, like) {
-      const self = this
-      axios
-        .post('http://localhost:5000/', {
-          id: id,
-          like: like,
-        })
-        .then(function(response) {
-          console.log(response.data)
-          self.fetchData()
-        })
-        .catch(function(error) {
-          console.log(error)
-        })
-    },
-  },
-  created() {
-    this.fetchData()
-  },
 }
 </script>
 
@@ -144,45 +128,11 @@ $tagbcg: rgba(141, 190, 80, 0.5);
 
 .post__like {
   cursor: pointer;
-  // margin-right: 12px;
 }
 
 .post__likes-amount {
   font-family: Arial, sans-serif;
   font-size: $fs12;
-  // margin-left: 12px;
-}
-
-@media (min-width: 1920px) {
-  body {
-    margin: 60px auto;
-  }
-
-  .posts {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-}
-
-@media (min-width: 1470px) and (max-width: 1919px) {
-  .posts {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-@media (min-width: 991px) and (max-width: 1469px) {
-  .posts {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 990px) {
-  .posts {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 510px) {

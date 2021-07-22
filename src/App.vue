@@ -1,18 +1,53 @@
 <template>
   <div id="app">
-    <Posts />
+    <div class="posts">
+      <Post
+        v-for="post in getData"
+        :key="post.id"
+        :id="post.id"
+        :getImage="getImage"
+        :name="post.name"
+        :description="post.description"
+        :tag="post.tag"
+        :date="post.date"
+        :like="post.like"
+        :addLike="addLike"
+      ></Post>
+    </div>
   </div>
 </template>
 
 <script>
-import LikeLogo from '../src/assets/Vector.svg'
-import Posts from './components/Posts'
+import { mapActions, mapGetters } from 'vuex'
+import axios from 'axios'
+import Post from './components/Post'
 
 export default {
   name: 'App',
   components: {
-    LikeLogo,
-    Posts,
+    Post,
+  },
+  computed: mapGetters(['getData', 'getImage']),
+  methods: {
+    ...mapActions(['fetchData']),
+    addLike(id, like) {
+      const self = this
+      axios
+        .post('http://localhost:5000/', {
+          id: id,
+          like: like,
+        })
+        .then(function(response) {
+          console.log(response.data)
+          self.fetchData()
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+    },
+  },
+  created() {
+    this.fetchData()
   },
 }
 </script>
@@ -46,5 +81,37 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+@media (min-width: 1920px) {
+  body {
+    margin: 60px auto;
+  }
+
+  .posts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1470px) and (max-width: 1919px) {
+  .posts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 991px) and (max-width: 1469px) {
+  .posts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 990px) {
+  .posts {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 }
 </style>
